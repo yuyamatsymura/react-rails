@@ -14,6 +14,6 @@ class Api::V1::SchedulesController < ApplicationController
     
       private
         def schedule_params
-          params.require(:schedule).permit(:calender_id, :start, :title)
+          params.require(:schedule).permit(:calender_id, :start, :end, :title)
         end
 end

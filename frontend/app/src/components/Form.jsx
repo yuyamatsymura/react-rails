@@ -1,38 +1,90 @@
 import React, { useEffect, useState } from 'react';
+import { Box, Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
+import { createSchedule } from '../lib/api/schedule';
 
-const Form = ({ selectDate, setFormview, url }) => {
+const Form = ({ selectDate, handleClose, url, formview, toast }) => {
     // todo split("/").join("-") を変換するよう修正する
-    console.log(selectDate.start)
-    const [startDate, setStartDate] = useState(selectDate.start.toLocaleDateString().split("/").join("-"));
     const [calenderId, setCalenderId] = useState(url.id);
+    const [value, setValue] = useState({
+        calenderId: calenderId,
+        start: selectDate.start.toLocaleDateString("ja-JP", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+        }).split("/").join("-"),
+        end: "",
+        title: ""
+    })
 
-    const handleChangeStartDate = (e) => {
-        console.log("handleChangeStartDate")
-        setStartDate(e.target.value);
+    const handleChange = (e) => {
+        console.log("handleChange")
+        console.log(e.target)
+        setValue({
+            ...value,
+            [e.target.name]: e.target.value
+        })
     }
 
-    const handleCanselClick = () => {
-        setFormview(false);
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const res = await createSchedule(value)
+            handleClose()
+            const notify = () => toast.success('スケジュールの登録ができました')
+            notify()
+            console.log(res)
+        } catch (e) {
+            console.log(e)
+            const notify = () => toast.error('スケジュールの登録に失敗しました')
+            notify()
+        }
     }
 
     return (
         <>
-            <form>
-                <input type="text" hidden name="calenderId" id="calenderId" value={calenderId} readOnly/>
-                <div>
-                    <label>タイトル</label><br />
-                    <input type="text" />
-                </div>
-                <div>
-                    <label>開始日</label><br />
-                    <input type="date" name="start" id="start" value={startDate} onChange={handleChangeStartDate} />
-                </div>
-                <div>
-                    <label>終了日</label><br />
-                    <input type="date" name="end" id="end" />
-                </div>
-                <button onClick={handleCanselClick}>キャンセル</button>
-            </form>
+            <Dialog open={formview} onClose={handleClose}>
+                <DialogTitle>スケジュール入力</DialogTitle>
+                <DialogContent>
+                    <label>タイトル</label>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="title"
+                        name="title"
+                        type="text"
+                        fullWidth
+                        variant="standard"
+                        value={value.title}
+                        onChange={(e) => handleChange(e)}
+                    />
+                    <label>開始日</label>
+                    <TextField
+                        margin="dense"
+                        id="start"
+                        name="start"
+                        type="date"
+                        fullWidth
+                        variant="standard"
+                        value={value.start}
+                        onChange={(e) => handleChange(e)}
+                    />
+                    <label>終了日</label>
+                    <TextField
+                        margin="dense"
+                        id="end"
+                        name="end"
+                        type="date"
+                        fullWidth
+                        variant="standard"
+                        value={value.end}
+                        onChange={(e) => handleChange(e)}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} variant="contained">Cancel</Button>
+                    <Button onClick={handleSubmit} variant="contained" color="primary">Subscribe</Button>
+                </DialogActions>
+            </Dialog>
         </>
     );
 };

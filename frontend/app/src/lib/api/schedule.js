@@ -6,6 +6,6 @@ export const getSchedule = (id) => {
 };
 
 // スケジュール追加
-export const createPost = (params) => {
+export const createSchedule = (params) => {
   return client.post('/schedules', params);
 };

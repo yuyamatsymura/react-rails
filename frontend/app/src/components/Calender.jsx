@@ -5,6 +5,8 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import Form from './Form';
+import { Box, Button, Container, Toolbar } from '@material-ui/core';
+import toast, { Toaster } from 'react-hot-toast';
 
 const Calender = () => {
     const params = useParams();
@@ -12,6 +14,8 @@ const Calender = () => {
     const [schedule, setSchedule] = useState([]);
     const [formview, setFormview] = useState(false);
     const [selectDate, setSelectDate] = useState();
+
+    
 
     useEffect(() => {
         handleGetSchedule();
@@ -34,17 +38,29 @@ const Calender = () => {
         setSelectDate(date)
     };
 
+    const handleClose = () => {
+        setFormview(false);
+    };
+
     return (
         <>
-            <FullCalendar
-                plugins={[dayGridPlugin, interactionPlugin]}
-                initialView="dayGridMonth"
-                locale="ja"
-                selectable="true"
-                select={handleDateSelect}
-                events={schedule}
-            />
-            {formview ? < Form selectDate={selectDate} setFormview={setFormview} url={params}/> : null}
+            <Box component="span" m={1}>
+                <Button variant="contained">
+                    Default
+                </Button>
+            </Box>
+            <Toaster />
+            <Container maxWidth="md">
+                <FullCalendar
+                    plugins={[dayGridPlugin, interactionPlugin]}
+                    initialView="dayGridMonth"
+                    locale="ja"
+                    selectable="true"
+                    select={handleDateSelect}
+                    events={schedule}
+                />
+            </Container>
+            {formview ? < Form selectDate={selectDate} handleClose={handleClose} url={params} formview={formview} toast={toast}/> : null}
         </>
     );
 };
