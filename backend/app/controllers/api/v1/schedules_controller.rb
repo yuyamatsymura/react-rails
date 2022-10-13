@@ -1,6 +1,6 @@
 class Api::V1::SchedulesController < ApplicationController
-    def show
-        render json: Schedule.where(calender_id: params[:id])
+    def index
+        render json: Schedule.where(calender_id: params[:calender_id])
     end
     
       def create
@@ -10,6 +10,21 @@ class Api::V1::SchedulesController < ApplicationController
         else
           render json: schedule.erros, status: 422
         end
+      end
+
+      def update
+        schedule = Schedule.find(params[:id])
+        if schedule.update(schedule_params)
+          render json: schedule
+        else
+          render json: schedule.errors, status: 422
+        end
+      end
+
+      def destroy
+        schedule = Schedule.find(params[:id])
+        schedule.destroy
+        render json: schedule
       end
     
       private

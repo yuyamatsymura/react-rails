@@ -1,24 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
-import { createSchedule } from '../lib/api/schedule';
+import { createSchedule, updateSchedule, deleteSchedule } from '../lib/api/schedule';
 
-const Form = ({ selectDate, handleClose, url, formview, toast }) => {
-    // todo split("/").join("-") を変換するよう修正する
-    const [calenderId, setCalenderId] = useState(url.id);
+const Form = ({ selectDate, handleClose, url, formview, toast, handleGetSchedule, editMode }) => {
+
+
     const [value, setValue] = useState({
-        calenderId: calenderId,
-        start: selectDate.start.toLocaleDateString("ja-JP", {
+        calenderId: url.id,
+        start: editMode ? selectDate.start : selectDate.start.toLocaleDateString("ja-JP", {
             year: "numeric",
             month: "2-digit",
             day: "2-digit",
         }).split("/").join("-"),
-        end: "",
-        title: ""
+        end: editMode ? selectDate.end : "",
+        title: editMode ? selectDate.title : ""
     })
 
     const handleChange = (e) => {
-        console.log("handleChange")
-        console.log(e.target)
         setValue({
             ...value,
             [e.target.name]: e.target.value
@@ -28,11 +26,11 @@ const Form = ({ selectDate, handleClose, url, formview, toast }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await createSchedule(value)
+            const res = await createSchedule(value.calenderId, value)
             handleClose()
+            handleGetSchedule()
             const notify = () => toast.success('スケジュールの登録ができました')
             notify()
-            console.log(res)
         } catch (e) {
             console.log(e)
             const notify = () => toast.error('スケジュールの登録に失敗しました')
@@ -40,10 +38,37 @@ const Form = ({ selectDate, handleClose, url, formview, toast }) => {
         }
     }
 
+    const handleUpdate = async (e) => {
+        e.preventDefault()
+        try {
+            const res = await updateSchedule(value.calenderId, selectDate.id, value)
+            handleClose()
+            handleGetSchedule()
+            const notify = () => toast.success('スケジュールの更新ができました')
+            notify()
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    const handleDelete = async (e) => {
+        e.preventDefault()
+        try {
+            const res = await deleteSchedule(value.calenderId, selectDate.id)
+            handleClose()
+            handleGetSchedule()
+            const notify = () => toast.success('スケジュールの削除ができました')
+            notify()
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+
     return (
         <>
             <Dialog open={formview} onClose={handleClose}>
-                <DialogTitle>スケジュール入力</DialogTitle>
+                {editMode ? <DialogTitle>スケジュール更新</DialogTitle> : <DialogTitle>スケジュール入力</DialogTitle>}
                 <DialogContent>
                     <label>タイトル</label>
                     <TextField
@@ -76,13 +101,19 @@ const Form = ({ selectDate, handleClose, url, formview, toast }) => {
                         type="date"
                         fullWidth
                         variant="standard"
-                        value={value.end}
+                        value={value.end ?? ''}
                         onChange={(e) => handleChange(e)}
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose} variant="contained">Cancel</Button>
-                    <Button onClick={handleSubmit} variant="contained" color="primary">Subscribe</Button>
+                    {editMode ?
+                        <>
+                            <Button onClick={handleUpdate} variant="contained" color="primary">更新</Button>
+                            <Button onClick={handleDelete} variant="contained" color="secondary">削除</Button>
+                        </>
+                        : <Button onClick={handleSubmit} variant="contained" color="primary">登録</Button>
+                    }
+                    <Button onClick={handleClose} variant="contained">キャンセル</Button>
                 </DialogActions>
             </Dialog>
         </>

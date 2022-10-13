@@ -14,8 +14,10 @@ const Calender = () => {
     const [schedule, setSchedule] = useState([]);
     const [formview, setFormview] = useState(false);
     const [selectDate, setSelectDate] = useState();
+    const [editMode, setEditMode] = useState(false);
+    const [selectSchedule, setSelectSchedule] = useState();
 
-    
+
 
     useEffect(() => {
         handleGetSchedule();
@@ -24,7 +26,6 @@ const Calender = () => {
     const handleGetSchedule = async () => {
         try {
             const res = await getSchedule(params.id);
-            console.log(res.data);
             setSchedule(res.data);
         } catch (e) {
             console.log(e);
@@ -32,14 +33,20 @@ const Calender = () => {
     };
 
     const handleDateSelect = (date) => {
-        // 2回クリックされる場合の考慮
-        setFormview(false)
-        setFormview(true)
         setSelectDate(date)
+        setEditMode(false)
+        setFormview(true)
     };
 
     const handleClose = () => {
         setFormview(false);
+    };
+
+    const handleEventClick = (data) => {
+        const selectData = schedule.find(e => e.id == data.event.id)
+        setEditMode(true)
+        setSelectSchedule(selectData);
+        setFormview(true)
     };
 
     return (
@@ -58,9 +65,21 @@ const Calender = () => {
                     selectable="true"
                     select={handleDateSelect}
                     events={schedule}
+                    eventClick={handleEventClick}
                 />
             </Container>
-            {formview ? < Form selectDate={selectDate} handleClose={handleClose} url={params} formview={formview} toast={toast}/> : null}
+            {formview ?
+                < Form
+                    editMode={editMode}
+                    selectDate={editMode ? selectSchedule : selectDate}
+                    handleClose={handleClose}
+                    url={params}
+                    formview={formview}
+                    toast={toast}
+                    handleGetSchedule={handleGetSchedule}
+                />
+                : null
+            }
         </>
     );
 };
