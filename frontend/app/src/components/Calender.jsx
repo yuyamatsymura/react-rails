@@ -12,7 +12,7 @@ import Spacer from './Spacer';
 const Calender = () => {
     const params = useParams();
     const [schedule, setSchedule] = useState([]);
-    const [formview, setFormview] = useState(false);
+    const [open, setOpen] = useState(false);
     const [selectDate, setSelectDate] = useState();
     const [editMode, setEditMode] = useState(false);
     const [selectSchedule, setSelectSchedule] = useState();
@@ -30,26 +30,26 @@ const Calender = () => {
         } catch (e) {
             const notify = () => toast.error('共有カレンダーが作成されていません\n 共有カレンダー作成ページにリダイレクトします')
             notify()
-            // todo URL
-            setTimeout(() => {window.location.href = 'http://localhost:3000/'}, 3000);
+            // todo react-URL
+            setTimeout(() => {window.location.href = process.env.REACT_APP_BASE_URL}, 3000);
         }
     };
 
     const handleDateSelect = (date) => {
         setSelectDate(date)
         setEditMode(false)
-        setFormview(true)
+        setOpen(true)
     };
 
     const handleClose = () => {
-        setFormview(false);
+        setOpen(false);
     };
 
     const handleEventClick = (data) => {
         const selectData = schedule.find(e => e.id == data.event.id)
         setEditMode(true)
         setSelectSchedule(selectData);
-        setFormview(true)
+        setOpen(true)
     };
 
     return (
@@ -67,13 +67,13 @@ const Calender = () => {
                     eventClick={handleEventClick}
                 />
             </Container>
-            {formview ?
+            {open ?
                 < Form
                     editMode={editMode}
                     selectDate={editMode ? selectSchedule : selectDate}
                     handleClose={handleClose}
                     url={params}
-                    formview={formview}
+                    open={open}
                     toast={toast}
                     handleGetSchedule={handleGetSchedule}
                 />

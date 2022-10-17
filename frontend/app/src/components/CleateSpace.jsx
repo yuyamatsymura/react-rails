@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Box, Button, Container, Grid } from '@material-ui/core';
+import React, { useState } from 'react';
+import { Box, Button, Grid } from '@material-ui/core';
 import toast, { Toaster } from 'react-hot-toast';
 import Alert from '@material-ui/lab/Alert';
 import { createCalender } from '../lib/api/calender';
@@ -11,14 +11,13 @@ const CleateSpace = () => {
 
     const [created, setCreated] = useState(false);
     const [url, setUrl] = useState("");
-    // todo URL
-    const baseUrl = 'http://localhost:3000/';
+    // todo react-URL
+    const baseUrl = process.env.REACT_APP_BASE_URL;
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             const res = await createCalender()
-            console.log(res.data.url)
             setUrl(baseUrl + res.data.url)
             setCreated(true)
             const notify = () => toast.success('共有カレンダーが作成されました')

@@ -16,7 +16,7 @@ const App = () => {
       <Routes>
         <Route path='/' element={<CleateSpace />} />
         <Route path='/:id' element={<Calender />} />
-        <Route path="*" element={<div>404　ページが見つかりません。</div>} />
+        <Route path="*" element={<div><h1>404</h1><p>ページが見つかりません。</p></div>} />
       </Routes>
     </Router>
     </>

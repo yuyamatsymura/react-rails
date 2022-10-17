@@ -5,10 +5,10 @@ const options = {
   ignoreHeaders: true,
 };
 
-// todo URL
+// todo rails-URL
 const client = applyCaseMiddleware(
   axios.create({
-    baseURL: 'http://localhost:3001/api/v1',
+    baseURL: process.env.REACT_APP_API,
   }),
   options
 );

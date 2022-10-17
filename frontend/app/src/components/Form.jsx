@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
 import { createSchedule, updateSchedule, deleteSchedule } from '../lib/api/schedule';
 
-const Form = ({ selectDate, handleClose, url, formview, toast, handleGetSchedule, editMode }) => {
+const Form = ({ selectDate, handleClose, url, open, toast, handleGetSchedule, editMode }) => {
 
 
     const [value, setValue] = useState({
@@ -17,7 +17,7 @@ const Form = ({ selectDate, handleClose, url, formview, toast, handleGetSchedule
     })
 
     const handleChange = (e) => {
-        if(e.target.name === "title" && e.target.value.length > 30){
+        if (e.target.name === "title" && e.target.value.length > 30) {
             return;
         }
         setValue({
@@ -28,7 +28,7 @@ const Form = ({ selectDate, handleClose, url, formview, toast, handleGetSchedule
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if(!validate()) return;
+        if (!validate()) return;
         try {
             const res = await createSchedule(value.calenderId, value)
             handleClose()
@@ -44,7 +44,7 @@ const Form = ({ selectDate, handleClose, url, formview, toast, handleGetSchedule
 
     const handleUpdate = async (e) => {
         e.preventDefault()
-        if(!validate()) return;
+        if (!validate()) return;
         try {
             const res = await updateSchedule(value.calenderId, selectDate.id, value)
             handleClose()
@@ -71,17 +71,17 @@ const Form = ({ selectDate, handleClose, url, formview, toast, handleGetSchedule
 
     const validate = () => {
         let validated = true;
-        if(value.title === ""){
+        if (value.title === "") {
             const notify = () => toast.error('タイトルが未入力のため登録できません。')
             notify()
             validated = false;
         }
-        if(value.start === ""){
+        if (value.start === "") {
             const notify = () => toast.error('開始日が未入力のため登録できません。')
             notify()
             validated = false;
         }
-        if(value.end !== "" && value.start > value.end ){
+        if (value.end !== "" && value.start > value.end) {
             const notify = () => toast.error('開始日と終了日の大小関係が正しくありません。')
             notify()
             validated = false;
@@ -91,7 +91,7 @@ const Form = ({ selectDate, handleClose, url, formview, toast, handleGetSchedule
 
     return (
         <>
-            <Dialog open={formview} onClose={handleClose}>
+            <Dialog open={open} onClose={handleClose}>
                 {editMode ? <DialogTitle>スケジュール更新</DialogTitle> : <DialogTitle>スケジュール入力</DialogTitle>}
                 <DialogContent>
                     <label>タイトル</label>
