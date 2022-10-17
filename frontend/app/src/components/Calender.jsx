@@ -7,10 +7,10 @@ import interactionPlugin from "@fullcalendar/interaction";
 import Form from './Form';
 import { Box, Button, Container, Toolbar } from '@material-ui/core';
 import toast, { Toaster } from 'react-hot-toast';
+import Spacer from './Spacer';
 
 const Calender = () => {
     const params = useParams();
-
     const [schedule, setSchedule] = useState([]);
     const [formview, setFormview] = useState(false);
     const [selectDate, setSelectDate] = useState();
@@ -28,7 +28,10 @@ const Calender = () => {
             const res = await getSchedule(params.id);
             setSchedule(res.data);
         } catch (e) {
-            console.log(e);
+            const notify = () => toast.error('共有カレンダーが作成されていません\n 共有カレンダー作成ページにリダイレクトします')
+            notify()
+            // todo URL
+            setTimeout(() => {window.location.href = 'http://localhost:3000/'}, 3000);
         }
     };
 
@@ -51,12 +54,8 @@ const Calender = () => {
 
     return (
         <>
-            <Box component="span" m={1}>
-                <Button variant="contained">
-                    Default
-                </Button>
-            </Box>
             <Toaster />
+            <Spacer />
             <Container maxWidth="md">
                 <FullCalendar
                     plugins={[dayGridPlugin, interactionPlugin]}
@@ -80,6 +79,7 @@ const Calender = () => {
                 />
                 : null
             }
+            <Spacer />
         </>
     );
 };

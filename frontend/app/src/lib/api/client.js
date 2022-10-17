@@ -5,7 +5,7 @@ const options = {
   ignoreHeaders: true,
 };
 
-// TODO urlを設定ファイルに書くこと
+// todo URL
 const client = applyCaseMiddleware(
   axios.create({
     baseURL: 'http://localhost:3001/api/v1',

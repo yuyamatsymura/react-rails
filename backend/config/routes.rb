@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
+      post 'calender', to: 'calenders#create'
       get 'schedules/:calender_id', to: 'schedules#index'
       post 'schedules/:calender_id', to: 'schedules#create'
       patch 'schedules/:calender_id/:id', to: 'schedules#update'

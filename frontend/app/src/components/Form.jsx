@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Box, Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
+import React, { useState } from 'react';
+import { Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
 import { createSchedule, updateSchedule, deleteSchedule } from '../lib/api/schedule';
 
 const Form = ({ selectDate, handleClose, url, formview, toast, handleGetSchedule, editMode }) => {
@@ -17,6 +17,9 @@ const Form = ({ selectDate, handleClose, url, formview, toast, handleGetSchedule
     })
 
     const handleChange = (e) => {
+        if(e.target.name === "title" && e.target.value.length > 30){
+            return;
+        }
         setValue({
             ...value,
             [e.target.name]: e.target.value
@@ -25,26 +28,28 @@ const Form = ({ selectDate, handleClose, url, formview, toast, handleGetSchedule
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if(!validate()) return;
         try {
             const res = await createSchedule(value.calenderId, value)
             handleClose()
             handleGetSchedule()
-            const notify = () => toast.success('スケジュールの登録ができました')
+            const notify = () => toast.success('スケジュールの登録が完了しました。')
             notify()
         } catch (e) {
             console.log(e)
-            const notify = () => toast.error('スケジュールの登録に失敗しました')
+            const notify = () => toast.error('スケジュールの登録に失敗しました。')
             notify()
         }
     }
 
     const handleUpdate = async (e) => {
         e.preventDefault()
+        if(!validate()) return;
         try {
             const res = await updateSchedule(value.calenderId, selectDate.id, value)
             handleClose()
             handleGetSchedule()
-            const notify = () => toast.success('スケジュールの更新ができました')
+            const notify = () => toast.success('スケジュールの更新が完了しました。')
             notify()
         } catch (e) {
             console.log(e)
@@ -57,13 +62,32 @@ const Form = ({ selectDate, handleClose, url, formview, toast, handleGetSchedule
             const res = await deleteSchedule(value.calenderId, selectDate.id)
             handleClose()
             handleGetSchedule()
-            const notify = () => toast.success('スケジュールの削除ができました')
+            const notify = () => toast.success('スケジュールの削除が完了しました。')
             notify()
         } catch (e) {
             console.log(e)
         }
     }
 
+    const validate = () => {
+        let validated = true;
+        if(value.title === ""){
+            const notify = () => toast.error('タイトルが未入力のため登録できません。')
+            notify()
+            validated = false;
+        }
+        if(value.start === ""){
+            const notify = () => toast.error('開始日が未入力のため登録できません。')
+            notify()
+            validated = false;
+        }
+        if(value.end !== "" && value.start > value.end ){
+            const notify = () => toast.error('開始日と終了日の大小関係が正しくありません。')
+            notify()
+            validated = false;
+        }
+        return validated;
+    }
 
     return (
         <>
