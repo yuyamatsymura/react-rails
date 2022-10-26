@@ -39,7 +39,7 @@ const CleateSpace = () => {
         <>
             <Toaster />
             <Grid container alignItems='center' justifyContent='center' direction="column">
-                <h1>共有スペースの作成</h1>
+                <h1>共有カレンダーの作成</h1>
                 <Box component="span" m={1}>
                     <Button onClick={handleSubmit} variant="contained" color="primary" disabled={created}>作成</Button>
                 </Box>
@@ -47,7 +47,7 @@ const CleateSpace = () => {
                     <Alert severity="success" size="small" component="span" action={
                         <FileCopyIcon fontSize="small" color="action" onClick={handleCopy} />
                     }>
-                        {url}
+                        < a target = "_blank" href = {url} >{url}</ a >
                     </Alert>
                 </Box> : null}
                 <Spacer />

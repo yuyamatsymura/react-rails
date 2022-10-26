@@ -31,7 +31,7 @@ const ExplanationCard = () => {
           使い方
         </Typography>
         <Typography className={classes.pos} color="textSecondary">
-          １. 作成ボタンをクリックして共有スペース（URL）を作成する
+          １. 作成ボタンをクリックして共有カレンダー（URL）を作成する
         </Typography>
         <Typography className={classes.pos} color="textSecondary">
           ２. 作成されたURLを共有する
