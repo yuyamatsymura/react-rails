@@ -6,6 +6,7 @@ import { createCalender } from '../lib/api/calender';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import ExplanationCard from './ExplanationCard';
 import Spacer from './Spacer';
+import IconButton from '@material-ui/core/IconButton';
 
 const CleateSpace = () => {
 
@@ -17,9 +18,9 @@ const CleateSpace = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            setCreated(true)
             const res = await createCalender()
             setUrl(baseUrl + res.data.url)
-            setCreated(true)
             const notify = () => toast.success('共有カレンダーが作成されました')
             notify()
         } catch (e) {
@@ -45,7 +46,10 @@ const CleateSpace = () => {
                 </Box>
                 {created ? <Box mt={2}>
                     <Alert severity="success" size="small" component="span" action={
-                        <FileCopyIcon fontSize="small" color="action" onClick={handleCopy} />
+                        <IconButton color="primary" size="small">
+                            <FileCopyIcon fontSize="small" color="action" onClick={handleCopy} />
+                        </IconButton>
+                        
                     }>
                         < a target = "_blank" href = {url} >{url}</ a >
                     </Alert>

@@ -8,6 +8,13 @@ import Form from './Form';
 import { Box, Button, Container, Toolbar } from '@material-ui/core';
 import toast, { Toaster } from 'react-hot-toast';
 import Spacer from './Spacer';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        flexGrow: 1,
+    }
+}));
 
 const Calender = () => {
     const params = useParams();
@@ -26,12 +33,22 @@ const Calender = () => {
     const handleGetSchedule = async () => {
         try {
             const res = await getSchedule(params.id);
-            setSchedule(res.data);
+            let newSchedule = [];
+            res.data.forEach(value => {
+                newSchedule.push({
+                    id: value.id,
+                    calenderId: value.calenderId,
+                    start: value.start,
+                    end: new Date(Date.parse(value.end)),
+                    title: value.title
+                })
+            });
+            setSchedule(newSchedule)
         } catch (e) {
             const notify = () => toast.error('共有カレンダーが作成されていません\n 共有カレンダー作成ページにリダイレクトします')
             notify()
             // todo react-URL
-            setTimeout(() => {window.location.href = process.env.REACT_APP_BASE_URL}, 3000);
+            setTimeout(() => { window.location.href = process.env.REACT_APP_BASE_URL }, 3000);
         }
     };
 

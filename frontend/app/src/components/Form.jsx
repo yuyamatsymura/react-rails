@@ -4,15 +4,15 @@ import { createSchedule, updateSchedule, deleteSchedule } from '../lib/api/sched
 
 const Form = ({ selectDate, handleClose, url, open, toast, handleGetSchedule, editMode }) => {
 
+    const dateFormat = (date) => {
+        // YYYY-MM-DDにフォーマットする
+        return date.toLocaleDateString("ja-JP", { year: "numeric", month: "2-digit", day: "2-digit", }).split("/").join("-");
+    }
 
     const [value, setValue] = useState({
         calenderId: url.id,
-        start: editMode ? selectDate.start : selectDate.start.toLocaleDateString("ja-JP", {
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-        }).split("/").join("-"),
-        end: editMode ? selectDate.end : "",
+        start: editMode ? selectDate.start : dateFormat(selectDate.start),
+        end: editMode ? dateFormat(selectDate.end) : "",
         title: editMode ? selectDate.title : ""
     })
 
