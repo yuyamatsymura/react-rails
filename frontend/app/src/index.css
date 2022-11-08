@@ -12,6 +12,25 @@ code {
     monospace;
 }
 
+/* 時間非表示 */
 .fc-event-time{
   display : none;
+}
+
+/* イベントのカーソルを指にする */
+.fc-event-title-container {
+  cursor: pointer;
+}
+
+/* 土日の背景色変更 */
+td.fc-day-sat {
+  background-color: #eaf4ff;
+}
+td.fc-day-sun {
+  background-color: #ffeaea;
+}
+
+.fc-daygrid-event:hover {
+  border-color: #005FFF ;
+  background-color: blue ;
 }

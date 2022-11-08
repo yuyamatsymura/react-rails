@@ -8,13 +8,6 @@ import Form from './Form';
 import { Box, Button, Container, Toolbar } from '@material-ui/core';
 import toast, { Toaster } from 'react-hot-toast';
 import Spacer from './Spacer';
-import { makeStyles } from '@material-ui/core/styles';
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-        flexGrow: 1,
-    }
-}));
 
 const Calender = () => {
     const params = useParams();
