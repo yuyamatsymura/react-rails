@@ -5,7 +5,7 @@ import { createSchedule, updateSchedule, deleteSchedule } from '../lib/api/sched
 const Form = ({ selectDate, handleClose, url, open, toast, handleGetSchedule, editMode }) => {
 
     const dateFormat = (date) => {
-        // YYYY-MM-DDにフォーマットする
+        // YYYY-MM-DDにフォーマットする。
         return date.toLocaleDateString("ja-JP", { year: "numeric", month: "2-digit", day: "2-digit", }).split("/").join("-");
     }
 
